@@ -22,7 +22,6 @@ const formSchema = z.object({
   amount: z.number({ message: "Campo obrigatório" }),
   description: z.string().min(0).optional(),
   quantity: z
-  .coerce
   .number()
   .refine((val) => !isNaN(val), { message: "Informe um número válido" })
   .optional(),

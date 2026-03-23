@@ -11,17 +11,41 @@ import { getProducts } from "@/app/actions/get-product";
 
 export async function POST(req: NextRequest) {
   try {
-    //const { amount, payerEmail, description } = await req.json() as CreateOrderBody;
-    const product = await getProducts();
-    if (!product[0].amount) {
-      return NextResponse.json({ error: "order not found" }, { status: 404 });
+    const { drinkId  } = await req.json();
+
+    if (!drinkId) {
+      return NextResponse.json(
+        { error: "drinkId obrigatorio" },
+        { status: 400 }
+      );
     }
-    const amount = product[0].amount/100;
-    const description = product[0].description;
+
+    const drink = await prisma.drink.findUnique({
+      where: { id: drinkId },
+    });
+
+    if (!drink) {
+      return NextResponse.json(
+        { error: "Bebida nao encontrada" },
+        { status: 404 }
+      );
+    }
+
+  
+    const tempoMs = Math.min(drink.tempoMs, 10000); // max 10s
+    const description = drink.name;
     const external_reference = `order_${crypto.randomUUID()}`;
-    if (!amount || !external_reference) {
-      return NextResponse.json({ error: "Campos obrigatórios ausentes" }, { status: 400 });
-    }
+    // //const { amount, payerEmail, description } = await req.json() as CreateOrderBody;
+    // const product = await getProducts();
+    // if (!product[0].amount) {
+    //   return NextResponse.json({ error: "order not found" }, { status: 404 });
+    // }
+    // const amount = product[0].amount/100;
+    // const description = product[0].description;
+    // const external_reference = `order_${crypto.randomUUID()}`;
+    // if (!amount || !external_reference) {
+    //   return NextResponse.json({ error: "Campos obrigatórios ausentes" }, { status: 400 });
+    // }
 
     const idempotencyKey = crypto.randomUUID();
     const expiration = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // ⏱️ expira em 10 minutos
@@ -33,7 +57,7 @@ export async function POST(req: NextRequest) {
         "X-Idempotency-Key": idempotencyKey,
       },
       body: JSON.stringify({
-        transaction_amount: amount,
+        transaction_amount: drink.amount / 100,
         description: description,
         payment_method_id: "pix",
         payer: { email: "mazinhodev@example.com" },
@@ -53,8 +77,9 @@ export async function POST(req: NextRequest) {
     const order = await prisma.order.create({
       data: {
         paymentId: orderData.id.toString(),
-        amount: product[0].amount,
+        amount: orderData.transaction_amount,
         description: orderData.description,
+        tempoMs,
         status: orderData.status === "approved" ? "APPROVED" : "PENDING",
         paymentUrl: orderData.point_of_interaction?.transaction_data?.ticket_url,
         qrCode: orderData.point_of_interaction?.transaction_data?.qr_code,

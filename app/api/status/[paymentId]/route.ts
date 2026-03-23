@@ -3,19 +3,35 @@
 import { prisma } from "@/app/lib/prisma";
 import { NextResponse } from "next/server";
 
-export async function GET(req: Request, context: { params: Promise<{ paymentId: string }> }) {
-  // ⚠️ await antes de usar
-  const params = await context.params;
-  const paymentId = String(params.paymentId);
+export async function GET(
+  req: Request,
+  context: { params: Promise<{ paymentId: string }> },
+) {
+  try {
+    const params = await context.params;
+    const paymentId = String(params.paymentId);
 
-  const order = await prisma.order.findUnique({
-    where: { paymentId },
-    select: { id: true, status: true, paymentId: true},
-  });
+    const order = await prisma.order.findUnique({
+      where: { paymentId },
+      select: { status: true, tempoMs: true },
+    });
 
-  if (!order) {
-    return NextResponse.json({ error: "Pedido não encontrado" }, { status: 404 });
+    if (!order) {
+      return NextResponse.json(
+        { error: "Pedido não encontrado" },
+        { status: 404 },
+      );
+    }
+
+    return NextResponse.json({
+      status: order.status,
+      tempoMs: order.tempoMs,
+    });
+  } catch (error) {
+    console.error("Erro ao buscar status do pagamento:", error);
+    return NextResponse.json(
+      { error: "Erro ao buscar status do pagamento" },
+      { status: 500 },
+    );
   }
-
-  return NextResponse.json(order);
 }

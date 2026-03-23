@@ -28,6 +28,9 @@ export default  function  RootLayout({
     <Link href="/product">
     <MenubarTrigger>Produtos</MenubarTrigger>
     </Link>
+    <Link href="/drink">
+    <MenubarTrigger>Bebidas</MenubarTrigger>
+    </Link>
     <Link href="/order">
     <MenubarTrigger>Pedidos</MenubarTrigger>
     </Link>

@@ -45,6 +45,15 @@ model Product {
   updatedAt   DateTime?
 }
 
+model Drink {
+  id        String    @id @default(cuid())
+  name      String
+  amount    Int
+  tempoMs   Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime?
+}
+
 enum OrderStatus {
   PENDING
   APPROVED
@@ -56,6 +65,7 @@ model Order {
   paymentId    String      @unique
   amount       Int
   description  String
+  tempoMs      Int
   status       OrderStatus @default(PENDING)
   qrCode       String?
   qrCodeBase64 String?
