@@ -5,8 +5,7 @@ import { Button } from '@/components/ui/button'
 
 import { useAction } from "next-safe-action/hooks";
 import {
-  Dialog,
-  DialogTrigger,
+  Dialog
 } from "@/components/ui/dialog"
 import { createProductType } from '@/app/types/product'
 import { formatCentsToBRL } from '@/app/helpers/money'
