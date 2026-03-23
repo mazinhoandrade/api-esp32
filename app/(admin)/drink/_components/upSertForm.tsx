@@ -45,9 +45,10 @@ interface Props {
 }
 
 const selectTempoMs = [
-  { value: 3000, label: "300 ml" },
-  { value: 5000, label: "500 ml" },
-  { value: 7000, label: "700 ml" },
+  { value: 300, label: "300 ml" },
+  { value: 40, label: "40 ml" },
+  { value: 500, label: "500 ml" },
+  { value: 700, label: "700 ml" },
 ];
 
 const UpSertForm = ({ isOpen, onSuccess, drink }: Props) => {
