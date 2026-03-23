@@ -6,7 +6,6 @@ import crypto from "crypto";
 import { prisma } from "@/app/lib/prisma";
 import { Order } from "@/app/types/order";
 
-import { getProducts } from "@/app/actions/get-product";
 
 
 export async function POST(req: NextRequest) {

@@ -1,6 +1,6 @@
 import { formatCentsToBRL } from '@/app/helpers/money';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Box, DollarSignIcon, Icon, ShoppingBasket } from 'lucide-react'
+import { DollarSignIcon, ShoppingBasket } from 'lucide-react'
 import React from 'react'
 
 

@@ -1,5 +1,5 @@
 "use client"
-import { Microchip, Power } from 'lucide-react'
+import { Microchip } from 'lucide-react'
 import React from 'react'
 
 const Header = () => {
